@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f1e6">
+  <title>Simon & Ami — Wedding Speech</title>
+  <style>
+    :root {
+      --ivory:#f7f1e6;
+      --paper:#fffdf8;
+      --ink:#2f2a25;
+      --muted:#786f65;
+      --gold:#b7924d;
+      --line:rgba(183,146,77,.42);
+      --shadow:0 24px 70px rgba(75,58,30,.12);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      background:
+        radial-gradient(circle at top left, rgba(183,146,77,.07), transparent 35%),
+        linear-gradient(180deg,#f8f3ea 0%,#f3ecdf 100%);
+      color:var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height:1.78;
+      letter-spacing:.01em;
+    }
+    .wrap { width:min(940px,100%); margin:0 auto; padding:24px; }
+    .card {
+      position:relative;
+      overflow:hidden;
+      background:rgba(255,253,248,.97);
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      margin:22px 0 40px;
+    }
+    .cover {
+      min-height:92vh;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:72px 24px;
+    }
+    .cover-inner { max-width:680px; }
+    .eyebrow {
+      text-transform:uppercase;
+      letter-spacing:.28em;
+      font-size:.72rem;
+      color:var(--gold);
+      margin-bottom:28px;
+    }
+    h1 {
+      margin:0;
+      font-weight:500;
+      font-size:clamp(3rem,10vw,6.4rem);
+      line-height:.95;
+      letter-spacing:-.035em;
+    }
+    .amp {
+      display:block;
+      font-style:italic;
+      color:var(--gold);
+      font-size:.72em;
+      margin:.12em 0;
+    }
+    .subtitle {
+      margin:28px auto 8px;
+      text-transform:uppercase;
+      letter-spacing:.24em;
+      font-size:.82rem;
+      color:var(--muted);
+    }
+    .rule {
+      width:170px;
+      height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold),transparent);
+      margin:30px auto;
+      transform:scaleX(0);
+      transform-origin:center;
+      opacity:.25;
+      transition:transform 1.4s cubic-bezier(.22,1,.36,1), opacity 1.1s ease;
+    }
+    .visible .rule,
+    .rule.visible {
+      transform:scaleX(1);
+      opacity:1;
+    }
+    .byline { color:var(--muted); font-size:1.02rem; }
+    .scroll { margin-top:52px; color:var(--gold); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; }
+    .content { padding:clamp(38px,7vw,86px); }
+    .section-title {
+      text-align:center;
+      font-weight:500;
+      font-size:clamp(2rem,5vw,3.3rem);
+      margin:0 0 12px;
+    }
+    .section-kicker {
+      text-align:center;
+      color:var(--gold);
+      text-transform:uppercase;
+      letter-spacing:.22em;
+      font-size:.72rem;
+      margin-bottom:46px;
+    }
+    .speech {
+      max-width:690px;
+      margin:0 auto;
+      font-size:clamp(1.02rem,2.2vw,1.2rem);
+    }
+    .speech p { margin:0 0 1.25em; }
+    .speech p:first-child::first-letter {
+      float:left;
+      font-size:4.7rem;
+      line-height:.78;
+      padding:.12em .12em 0 0;
+      color:var(--gold);
+    }
+    .ornament {
+      text-align:center;
+      color:var(--gold);
+      font-size:1.4rem;
+      margin:34px 0;
+    }
+    .finale {
+      font-style:italic;
+      font-size:1.35em;
+      text-align:center;
+      margin:2.2em 0 1.4em !important;
+    }
+    .closing {
+      min-height:70vh;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:72px 24px;
+    }
+    blockquote {
+      max-width:670px;
+      margin:0 auto 38px;
+      font-size:clamp(1.65rem,5vw,3.2rem);
+      font-weight:500;
+      line-height:1.28;
+      letter-spacing:-.02em;
+    }
+    .signature { font-size:1.1rem; color:var(--muted); }
+    .signature strong { display:block; color:var(--ink); font-size:1.5rem; margin-top:8px; font-weight:500; }
+    .leaf {
+      position:absolute;
+      width:220px;
+      height:220px;
+      opacity:.11;
+      color:var(--gold);
+      pointer-events:none;
+      will-change:transform;
+      transition:transform .2s linear;
+    }
+    .leaf.tl { top:-50px; left:-52px; transform:rotate(-12deg); }
+    .leaf.br { bottom:-58px; right:-50px; transform:rotate(168deg); }
+    .fade {
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity 1s ease, transform 1s cubic-bezier(.22,1,.36,1);
+    }
+    .fade.visible { opacity:1; transform:none; }
+
+    .cover .eyebrow,
+    .cover h1,
+    .cover .subtitle,
+    .cover .byline,
+    .cover .scroll {
+      opacity:0;
+      transform:translateY(18px);
+    }
+    .cover.visible .eyebrow { animation:titleReveal .9s .15s forwards; }
+    .cover.visible h1 { animation:titleReveal 1.15s .35s forwards; }
+    .cover.visible .subtitle { animation:titleReveal .9s .65s forwards; }
+    .cover.visible .byline { animation:titleReveal .9s .95s forwards; }
+    .cover.visible .scroll { animation:titleReveal .9s 1.2s forwards, softPulse 2.8s 2.2s infinite; }
+
+    .speech p {
+      opacity:0;
+      transform:translateY(18px);
+      transition:opacity .8s ease, transform .8s cubic-bezier(.22,1,.36,1);
+    }
+    .speech p.revealed {
+      opacity:1;
+      transform:none;
+    }
+
+    .section-title,
+    .section-kicker,
+    .ornament,
+    blockquote,
+    .signature {
+      opacity:0;
+      transform:translateY(16px);
+      transition:opacity .9s ease, transform .9s cubic-bezier(.22,1,.36,1);
+    }
+    .visible .section-kicker,
+    .visible .section-title,
+    .visible .ornament,
+    .visible blockquote,
+    .visible .signature {
+      opacity:1;
+      transform:none;
+    }
+    .visible .section-title { transition-delay:.12s; }
+    .visible .ornament { transition-delay:.24s; }
+    .visible .signature { transition-delay:.18s; }
+
+    @keyframes titleReveal {
+      to { opacity:1; transform:none; }
+    }
+    @keyframes softPulse {
+      0%,100% { opacity:.7; transform:translateY(0); }
+      50% { opacity:1; transform:translateY(5px); }
+    }
+    @media (max-width:640px) {
+      .wrap { padding:10px; }
+      .card { border-radius:20px; }
+      .cover { min-height:88vh; padding:54px 20px; }
+      .content { padding:42px 24px; }
+      .speech { font-size:1.03rem; line-height:1.75; }
+      .leaf { width:160px; height:160px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      .fade,
+      .speech p,
+      .section-title,
+      .section-kicker,
+      .ornament,
+      blockquote,
+      .signature,
+      .cover .eyebrow,
+      .cover h1,
+      .cover .subtitle,
+      .cover .byline,
+      .cover .scroll {
+        opacity:1 !important;
+        transform:none !important;
+        transition:none !important;
+        animation:none !important;
+      }
+      .rule { transform:scaleX(1); opacity:1; transition:none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card cover fade">
+      <svg class="leaf tl" viewBox="0 0 220 220" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M28 190 C72 146, 110 94, 170 28"/>
+          <ellipse cx="60" cy="155" rx="16" ry="31" transform="rotate(-38 60 155)"/>
+          <ellipse cx="92" cy="120" rx="15" ry="28" transform="rotate(-28 92 120)"/>
+          <ellipse cx="126" cy="82" rx="14" ry="25" transform="rotate(-20 126 82)"/>
+          <ellipse cx="157" cy="48" rx="12" ry="22" transform="rotate(-12 157 48)"/>
+        </g>
+      </svg>
+      <svg class="leaf br" viewBox="0 0 220 220" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M28 190 C72 146, 110 94, 170 28"/>
+          <ellipse cx="60" cy="155" rx="16" ry="31" transform="rotate(-38 60 155)"/>
+          <ellipse cx="92" cy="120" rx="15" ry="28" transform="rotate(-28 92 120)"/>
+          <ellipse cx="126" cy="82" rx="14" ry="25" transform="rotate(-20 126 82)"/>
+          <ellipse cx="157" cy="48" rx="12" ry="22" transform="rotate(-12 157 48)"/>
+        </g>
+      </svg>
+      <div class="cover-inner">
+        <div class="eyebrow">A Wedding Keepsake</div>
+        <h1>Simon <span class="amp">&amp;</span> Ami</h1>
+        <div class="subtitle">Wedding Speech</div>
+        <div class="rule"></div>
+        <div class="byline">Presented by Hibiki Awai<br>July 2026</div>
+        <div class="scroll">Scroll to read ↓</div>
+      </div>
+    </section>
+
+    <section class="card content fade">
+      <div class="section-kicker">With love and congratulations</div>
+      <h2 class="section-title">Speech for Simon &amp; Ami’s Wedding</h2>
+      <div class="ornament">❦</div>
+      <article class="speech">
+        <p class="">Good afternoon, everyone.</p>
+<p class="">My name is Hibiki Awai. It is a great honor to say a few words today.</p>
+<p class="">First of all, congratulations to Simon, Ami, and both of your wonderful families.</p>
+<p class="">As you may have noticed, I’m quite nervous, so if you’ll allow me, I’ll simply call the groom “Simon,” just as I always have.</p>
+<p class="">I first met Simon five years ago when he came to Osaka University as an exchange student and joined our softball club.</p>
+<p class="">I still remember the day he showed up wearing a Toronto Blue Jays jersey. He looked like a real Major League Baseball player, and everyone was joking that a new player had been “transferred” from Canada.</p>
+<p class="">We both played third base during fielding practice, so we had many chances to talk and gradually became good friends.</p>
+<p class="">As I recall, it was during one of those practices that Simon told me he had started dating Ami.</p>
+<p class="">I also remember learning that Simon had come from the University of British Columbia. Naturally, I rushed to check the world university rankings, only to discover that Osaka University was nowhere near UBC. That remains a small emotional scar for me to this day.</p>
+<p class="">During our university years, we often went out for drinks, visited saunas, and spent hours talking about all kinds of random things. Looking back, those are some of my favorite memories.</p>
+<p class="">Simon is someone who always thinks for himself. He is intelligent, thoughtful, and one of the most interesting people to talk with.</p>
+<p class="">Recently, our conversations have become even more meaningful. Together with our friend Hikaru, who is also a graduate student, we often discuss our research, politics, and our hopes for the future.</p>
+<p class="">What impresses me most is not only Simon’s broad knowledge, but also how quickly he understands highly specialized topics such as our research. He always has his own perspective and explains his ideas with remarkable clarity and logic.</p>
+<p class="">Every conversation with Simon leaves me with new ideas and insights that I wouldn’t gain from anyone else.</p>
+<p class="">Ami, I have no doubt that Simon will continue to do very well in his career, so I think your future together is in very good hands.</p>
+<p class="">Ever since Simon first told me that he and Ami had started dating, he has kept me updated on all the important milestones in their relationship: the challenges they overcame together, their long-distance relationship when Simon returned to Canada, Ami’s time studying in Canada, Simon’s move back to Osaka, his proposal, and even buying their home.</p>
+<p class="">It makes me truly happy to be standing here today and to be part of such an important moment in the lives of two people whose journey I have had the privilege of watching from the beginning.</p>
+<p class="finale">Finally, Ami.</p>
+<p class="">Although we’ve only met briefly and haven’t had the chance to speak properly, Simon has always described you as an intelligent, confident, and thoughtful woman who is never afraid to express her own opinions.</p>
+<p class="">I sincerely hope that the two of you will continue to respect and support one another as you build a strong and wonderful family together.</p>
+<p class="">Ami and Simon, I wish you both a lifetime of happiness.</p>
+<p class="">Congratulations once again, and thank you very much.</p>
+      </article>
+    </section>
+
+    <section class="card closing fade">
+      <svg class="leaf tl" viewBox="0 0 220 220" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M28 190 C72 146, 110 94, 170 28"/>
+          <ellipse cx="60" cy="155" rx="16" ry="31" transform="rotate(-38 60 155)"/>
+          <ellipse cx="92" cy="120" rx="15" ry="28" transform="rotate(-28 92 120)"/>
+          <ellipse cx="126" cy="82" rx="14" ry="25" transform="rotate(-20 126 82)"/>
+        </g>
+      </svg>
+      <div>
+        <blockquote>May your life together be filled with happiness, laughter, and endless adventures.</blockquote>
+        <div class="rule"></div>
+        <div class="signature"><em>With best wishes,</em><strong>Hibiki Awai</strong></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const sectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade').forEach(item => sectionObserver.observe(item));
+
+    const paragraphObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          paragraphObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+
+    document.querySelectorAll('.speech p').forEach((p, index) => {
+      p.style.transitionDelay = `${Math.min(index * 35, 220)}ms`;
+      paragraphObserver.observe(p);
+    });
+
+    if (!reducedMotion) {
+      const leaves = [...document.querySelectorAll('.leaf')];
+
+      const updateParallax = () => {
+        const y = window.scrollY;
+        leaves.forEach((leaf, index) => {
+          const direction = index % 2 === 0 ? 1 : -1;
+          const offset = Math.max(-18, Math.min(18, y * 0.025 * direction));
+          const baseRotate = leaf.classList.contains('br') ? 168 : -12;
+          leaf.style.transform = `translate3d(0, ${offset}px, 0) rotate(${baseRotate + offset * 0.12}deg)`;
+        });
+      };
+
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            updateParallax();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      updateParallax();
+    }
+  </script>
+</body>
+</html>
